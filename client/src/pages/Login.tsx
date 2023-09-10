@@ -1,23 +1,37 @@
 import { IoMdLogIn } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { MdOutlineErrorOutline } from "react-icons/md";
 
-const Login:React.FC = () => {
+const Login: React.FC = () => {
   return (
-    <div
-      className="w-full h-screen flex justify-center items-center font-Ubuntu max-[750px]:h-[60dvh] max-[750px]:p-2">
+    <div className="w-full h-screen flex justify-center items-center font-Ubuntu max-[750px]:h-[60dvh] max-[750px]:p-2">
       <div className="bg-gradient-to-t from-cyan-100 via-blue-200 to-blue-300 w-[50%] h-auto p-10 shadow-lg shadow-slate-400 max-[750px]:w-[100%] max-[750px]:shadow-none max-[750px]:mt-36 max-[500px]:p-5 rounded-lg">
         <p className="my-5 text-center text-2xl">Welcome Back!</p>
-        <div className="my-2 flex flex-col justify-center items-center">
+        <div className="my-2 flex flex-col">
           <input
-            className="my-3 w-full h-10 border-2 px-2 rounded-md"
+            className="my-1 w-full h-10 border-2 px-2 rounded-md"
             type="text"
             placeholder="Email"
           />
+          {/* <p className="flex items-center text-left mb-2 text-red-500 font-bold text-sm">
+            {" "}
+            <span className="mr-1">
+              <MdOutlineErrorOutline size={"1rem"} />
+            </span>{" "}
+            Username is already taken
+          </p> */}
           <input
             className="my-1 w-full h-10 border-2 px-2 rounded-md"
             type="password"
             placeholder="Password"
           />
+          {/* <p className="flex items-center text-left mb-2 text-red-500 font-bold text-sm">
+            {" "}
+            <span className="mr-1">
+              <MdOutlineErrorOutline size={"1rem"} />
+            </span>{" "}
+            Username is already taken
+          </p> */}
         </div>
         <p className="text-right text-blue-500 cursor-pointer">
           Forget Password?
@@ -31,7 +45,9 @@ const Login:React.FC = () => {
         <p className="text-center">
           Don't have an account?
           <Link to={"/signup"}>
-            <span className="text-blue-500 cursor-pointer ml-2 hover:text-blue-600">Sign up</span>
+            <span className="text-blue-500 cursor-pointer ml-2 hover:text-blue-600">
+              Sign up
+            </span>
           </Link>
         </p>
       </div>
