@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        Ubuntu: ['Ubuntu', 'sans-serif'],
+        Montserrat: ['Montserrat', 'sans-serif'],
+        Lato: ['Lato', 'sans-serif'],
+        Quicksand: ['Quicksand', 'sans-serif'],
+      }
+    },
   },
   plugins: [],
 }
