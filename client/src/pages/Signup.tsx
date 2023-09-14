@@ -1,13 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { MdOutlineErrorOutline } from "react-icons/md";
 import { useState } from "react";
-
-type Errors = {
-  firstname?: string;
-  lastname?: string;
-  email?: string;
-  password?: string;
-};
+import { Errors } from "./Types";
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>();
