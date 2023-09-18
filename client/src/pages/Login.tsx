@@ -3,11 +3,20 @@ import { Link, Navigate } from "react-router-dom";
 import { MdOutlineErrorOutline } from "react-icons/md";
 import { Errors } from "./Types";
 import { useState } from "react";
+import { UserInfo } from "../App";
 
-const Login: React.FC = () => {
+type LoginProps = {
+  getUserInfo: (info: UserInfo) => void;
+};
+
+const Login: React.FC<LoginProps> = ({ getUserInfo }) => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [errors, setErrors] = useState<Errors | null>(null);
+  const [response, setResponse] = useState<{
+    _id: string;
+    firstname: string;
+  }>();
   const [redirect, setRedirect] = useState<boolean>(false);
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -25,12 +34,15 @@ const Login: React.FC = () => {
       const errors = await response.json();
       setErrors(errors);
     } else {
+      const res = await response.json();
+      setResponse(res);
+      getUserInfo(res);
       setRedirect(true);
     }
   };
 
   if (redirect) {
-    return <Navigate to="/homepage" />;
+    return <Navigate to={`/homepage/${response?._id}`} />;
   }
 
   return (

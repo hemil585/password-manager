@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cookieparser = require("cookie-parser");
 
 const userRouter = require("./routes/user");
+const infoRouter = require("./routes/Info");
 require("dotenv").config();
 
 const server = express();
@@ -25,6 +26,7 @@ const ConnectionToDB = (async (req, res) => {
 })();
 
 server.use("/", userRouter);
+server.use("/", infoRouter);
 
 server.get("/", (req, res) => {
   res.send("Password Manager");

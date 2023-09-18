@@ -4,13 +4,19 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { AiOutlineLogin } from "react-icons/ai";
 import { MdOutlineLogin } from "react-icons/md";
 import { HiLogin } from "react-icons/hi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import React, { useState } from "react";
+import { UserInfo } from "../App";
 
-const Navbar: React.FC = () => {
+type NavbarProps = {
+  info: UserInfo;
+};
+
+const Navbar: React.FC<NavbarProps> = ({ info }) => {
   const [toggle, setToggle] = useState<boolean>(false);
   const location = useLocation();
   const path: string = location.pathname;
+  const { id } = useParams<{ id: string }>();
 
   const handleProfileToggler = (): void => {
     setToggle(!toggle);
@@ -27,7 +33,7 @@ const Navbar: React.FC = () => {
             Password Manager
           </h3>
         </div>
-        {path === "/homepage" && (
+        {path.startsWith("/homepage/") && (
           <div className="relative flex">
             <BiSolidUserCircle
               size={"4rem"}
@@ -51,11 +57,13 @@ const Navbar: React.FC = () => {
         )}
       </div>
       {toggle && (
-        <div className="absolute w-full flex justify-end items-end pr-6">
+        <div className="relative w-full flex justify-end items-end pr-6">
           <div className="w-60 h-auto shadow-lg shadow-gray-500 right-0 p-6">
-            <p>Welcome, User</p>
+            <p>
+              Welcome, <span className="text-blue-400"> @{info.firstname}</span>
+            </p>
             <hr className="my-4" />
-            <Link to={"/login"} onClick={() => handleProfileToggler()}>
+            <Link to={`/homepage/${id}`} onClick={() => handleProfileToggler()}>
               <p className="flex justify-start items-center gap-7 cursor-pointer hover:text-blue-500 transition-all duration-300">
                 <span>
                   <AiOutlineLogin size={"1.5rem"} />
@@ -64,7 +72,10 @@ const Navbar: React.FC = () => {
               </p>
             </Link>
 
-            <Link to={"/signup"} onClick={() => handleProfileToggler()}>
+            <Link
+              to={`/homepage/${id}/signup`}
+              onClick={() => handleProfileToggler()}
+            >
               <p className="flex justify-start items-center gap-7 my-5 cursor-pointer hover:text-green-500 transition-all duration-300">
                 <span>
                   <MdOutlineLogin size={"1.5rem"} />
