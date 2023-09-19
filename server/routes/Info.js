@@ -4,6 +4,7 @@ const router = express.Router()
 
 
 router
-    .post('/info',InfoController.addInfo)
+    .post('/info/:id',InfoController.addInfo)
+    .get('/info/:id',InfoController.getInfo)
 
 module.exports = router

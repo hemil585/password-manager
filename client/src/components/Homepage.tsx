@@ -1,28 +1,70 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiFillEye, AiTwotoneEyeInvisible } from "react-icons/ai";
+import { useParams } from "react-router-dom";
 
 type UserInfo = {
+  _id: string;
   sitename: string;
   password: string;
 };
 
 const Homepage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [sitename, setSitename] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [sitename, setSitename] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
   const [userInfos, setUserInfos] = useState<UserInfo[]>([]);
+  const { id } = useParams();
 
-  const onSaveHandler = () => {
-    if (sitename.length > 0 && password.length > 0) {
-      const newUser = { sitename, password };
-      setUserInfos([...userInfos, newUser]);
-      setSitename("");
-      setPassword("");
+  useEffect(() => {
+    const getInfo = async () => {
+      const response = await fetch(`http://localhost:7575/info/${id}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      const extractedData = data.map((item: UserInfo) => ({
+        _id: item._id,
+        sitename: item.sitename,
+        password: item.password,
+      }));
+      setUserInfos(extractedData);
+    };
+    getInfo();
+  }, [sitename]);
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (sitename && password) {
+      if (sitename.length > 0 && password.length > 0) {
+        console.log("bjbcdjc: ", sitename, password);
+        const response = await fetch(`http://localhost:7575/info/${id}`, {
+          method: "POST",
+          headers: new Headers({
+            "Content-Type": "application/json",
+          }),
+          body: JSON.stringify({ sitename, password }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          console.log(error);
+        } else {
+          const res = await response.json();
+          console.log(res);
+          setSitename("");
+          setPassword("");
+        }
+      }
     }
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const copyPassword = (id: string) => {
+    if (id) {
+      const info = userInfos.find((item) => item._id === id);
+      if (info) {
+        navigator.clipboard.writeText(info.password);
+        alert(`Password copied successfully! 🙂`);
+      }
+    }
   };
 
   return (
@@ -34,6 +76,7 @@ const Homepage = () => {
               type="text"
               className="border px-1 h-9 rounded-md"
               placeholder="Sitename"
+              maxLength={17}
               value={sitename}
               onChange={(e) => setSitename(e.target.value)}
             />
@@ -66,20 +109,20 @@ const Homepage = () => {
                 />
               </div>
             )}
-            <button
-              className="bg-gray-400 h-9 rounded-md hover:bg-black hover:text-white font-bold uppercase transition-all duration-300"
-              onClick={() => onSaveHandler()}
-            >
+            <button className="bg-gray-400 h-9 rounded-md hover:bg-black hover:text-white font-bold uppercase transition-all duration-300">
               Save
             </button>
           </div>
         </form>
         <div className="mt-14 w-auto">
           <ul>
-            {userInfos.map((userInfo, index) => (
+            {userInfos.map((userInfo) => (
               <div>
-                <li key={index} className="w-full px-64 max-[615px]:px-52 max-[350px]:px-28 my-3 flex justify-center items-center h-10 font-Quicksand text-2xl border border-3 border-zinc-800 rounded-full bg-white-500 transition-all duration-300 hover:bg-black hover:text-white cursor-pointer" onClick={()=>{console.log('Hello');
-                }}>
+                <li
+                  key={userInfo._id}
+                  className="w-[19rem] px-64 max-[615px]:px-52 max-[500px]:px-16 max-[500px]:text-xl my-3 flex justify-center items-center h-10 font-Quicksand text-2xl border border-3 border-zinc-800 rounded-full bg-white-500 transition-all duration-300 hover:bg-black hover:text-white cursor-pointer"
+                  onClick={() => copyPassword(userInfo._id)}
+                >
                   {userInfo.sitename}
                 </li>
               </div>
